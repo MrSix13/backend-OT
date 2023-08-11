@@ -1,9 +1,9 @@
 from django.db import models
-from .region_model import Region
+from .region_model import Regiones
 
-class Provincia(models.Model):
+class Provincias(models.Model):
     nombre  = models.CharField(max_length=64)
-    region = models.ForeignKey(Region,on_delete=models.CASCADE, related_name='provincia')
+    region = models.ForeignKey(Regiones,on_delete=models.CASCADE, related_name='provincia_region')
     
     def __str__(self):
         return self.nombre

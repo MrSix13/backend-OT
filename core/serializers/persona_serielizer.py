@@ -1,26 +1,26 @@
 from rest_framework import serializers
-from core.entities.persona_model import Persona
-from core.entities.region_model import Region
-from core.entities.provincia_model import Provincia
-from core.entities.comuna_model import Comuna
+from core.entities.persona_model import Personas
+from core.entities.region_model import Regiones
+from core.entities.provincia_model import Provincias
+from core.entities.comuna_model import Comunas
 from core.utils.rut_utils import validar_rut
 from rut_chile import rut_chile
 
         
 class RegionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Region
+        model = Regiones
         fields = '__all__'
     
     
 class ProvinciaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Provincia
+        model = Provincias
         fields = '__all__'
 
 class ComunaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Comuna
+        model = Comunas
         fields = '__all__'    
 
 
@@ -31,7 +31,7 @@ class PersonaSerializer(serializers.ModelSerializer):
 
     
     class Meta:
-        model = Persona
+        model = Personas
         fields = '__all__'
         
     def format_rut(self, instance):
@@ -39,4 +39,4 @@ class PersonaSerializer(serializers.ModelSerializer):
         if data.get('rut'):
             data['rut'] = rut_chile.format_rut_without_dots(data['rut'])
         return data        
-        
+    

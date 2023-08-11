@@ -1,12 +1,17 @@
 from django.contrib import admin
-from core.entities.persona_model import Persona
-from core.entities.comuna_model import Comuna
-from core.entities.region_model import Region
-from .models import User
+from core.entities.persona_model import Personas
+from core.entities.comuna_model import Comunas
+from core.entities.region_model import Regiones
+from core.entities.permisos_model import Usuarios, Cargos
+
 
 # Register your models here.
 
-admin.site.register(Persona)
-admin.site.register(Comuna)
-admin.site.register(Region)
-admin.site.register(User)
+admin.site.register(Personas)
+admin.site.register(Comunas)
+admin.site.register(Regiones)
+admin.site.register(Usuarios)
+admin.site.register(Cargos)
+# admin.site.register(Permisos)
+# admin.site.register(Cargo)
+

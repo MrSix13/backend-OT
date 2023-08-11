@@ -1,5 +1,5 @@
 from core.repositories.persona_repository import PersonaRepository, RegionRepository, ProvinciaRepository, ComunaRepository
-from core.entities.persona_model import Persona
+
 
 class PersonaService:
     def __init__(self):

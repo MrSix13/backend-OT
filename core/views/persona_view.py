@@ -7,8 +7,8 @@ from rest_framework import status
 from rut_chile import rut_chile
 from core.services.persona_services import PersonaService,RegionService, ProvinciaService, ComunaService
 from core.serializers.persona_serielizer import PersonaSerializer, RegionSerializer, ProvinciaSerializer, ComunaSerializer
-from core.entities.comuna_model import Comuna
-from core.entities.persona_model import Persona,GeneroEnum,EstadoEnum,DominioInglesEnum
+from core.entities.comuna_model import Comunas
+from core.entities.persona_model import Personas,GeneroEnum,EstadoEnum,DominioInglesEnum
 from django.core.serializers import serialize
 from core.repositories.generic_repository import GenericDatabaseManager
 import pyexcel as pe
@@ -21,7 +21,7 @@ comuna_service = ComunaService()
 
 generic_db_manager = GenericDatabaseManager()
 
-table_name = "public.core_persona"
+table_name = "public.core_personas"
 
 #Personas
 @api_view(['POST'])
@@ -110,7 +110,7 @@ def personas_update(request, id):
         if comuna_id is not None:
             try:
                 comuna_id = int(comuna_id)
-                comuna = Comuna.objects.get(id=comuna_id)
+                comuna = Comunas.objects.get(id=comuna_id)
             except comuna.DoesNotExist:
                 return Response({"Error": "La comuna especificada no existe"}, status=status.HTTP_404_NOT_FOUND)
         
@@ -228,7 +228,7 @@ def provincia_by_id(request,id):
 def region_provincia_by_comuna_id(request, id):
     try:
         result = comuna_service.get_region_and_provincia_by_id(id)
-        comuna = Comuna(**result)
+        comuna = Comunas(**result)
         serializer = ComunaSerializer(comuna)
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:

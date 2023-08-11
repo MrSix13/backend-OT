@@ -1,8 +1,8 @@
-from core.entities.persona_model import Persona, GeneroEnum, EstadoEnum, DominioInglesEnum
-from core.entities.region_model import Region
-from core.entities.provincia_model import Provincia
-from core.entities.comuna_model import Comuna
-from core.serializers.persona_serielizer import ComunaSerializer
+from core.entities.persona_model import Personas, GeneroEnum, EstadoEnum, DominioInglesEnum
+from core.entities.region_model import Regiones
+from core.entities.provincia_model import Provincias
+from core.entities.comuna_model import Comunas
+# from core.serializers.persona_serielizer import ComunaSerializer
 from core.repositories.generic_repository import GenericDatabaseManager
 from rut_chile import rut_chile
 from django.db.models import Q
@@ -15,10 +15,10 @@ generic_databaseManager = GenericDatabaseManager()
 #Persona
 class PersonaRepository:
     def get_persona_by_id(self, id):
-        return Persona.objects.get(id=id)
+        return Personas.objects.get(id=id)
     
     def get_comunas_mapping():
-        comunas = Comuna.objects.all().values('nombre', 'id')
+        comunas = Comunas.objects.all().values('nombre', 'id')
         mapeo_comunas = {comuna['nombre']: comuna['id'] for comuna in comunas}
         return mapeo_comunas
         
@@ -136,11 +136,11 @@ class PersonaRepository:
 #Region        
 class RegionRepository:
     def get_all_regions(self):
-        return Region.objects.all()
+        return Regiones.objects.all()
     
     
     def get_region_by_id(self, id):
-        return Region.objects.get(id = id)
+        return Regiones.objects.get(id = id)
 
     
 
@@ -149,33 +149,33 @@ class ProvinciaRepository:
     def get_provncia_by_id(self, id):
         return Provincia.objects.get(id = id)
     def get_provincia_by_regionID(self,id):
-        return Provincia.objects.filter(region__id = id)
+        return Provincias.objects.filter(region__id = id)
 
 
 
 #Comuna
 class ComunaRepository:
     def get_comuna_by_provinciaID(self, id):
-        return Comuna.objects.filter(provincia__id = id)
+        return Comunas.objects.filter(provincia__id = id)
     
     def get_comuna_by_id(self, id):
-        return Comuna.objects.get(id = id)
+        return Comunas.objects.get(id = id)
     
-    def get_region_and_provincia_by_comuna_id(self, id):
-        try:
-            comuna = Comuna.objects.get(id=id)
-            serializer = ComunaSerializer(instance=comuna)
-            data = serializer.data
+    # def get_region_and_provincia_by_comuna_id(self, id):
+    #     try:
+    #         comuna = Comunas.objects.get(id=id)
+    #         serializer = ComunaSerializer(instance=comuna)
+    #         data = serializer.data
             
-            provincia_nombre = data.get('provincia', {}).get('nombre')
-            region_nombre = data.get('provincia', {}).get('region', {}).get('nombre')
+    #         provincia_nombre = data.get('provincia', {}).get('nombre')
+    #         region_nombre = data.get('provincia', {}).get('region', {}).get('nombre')
             
-            return {
-                "region": region_nombre,
-                "provincia": provincia_nombre
-            }
-        except Comuna.DoesNotExist:
-            return None
+    #         return {
+    #             "region": region_nombre,
+    #             "provincia": provincia_nombre
+    #         }
+    #     except Comunas.DoesNotExist:
+    #         return None
         
         
         
