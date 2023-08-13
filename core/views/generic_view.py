@@ -52,7 +52,14 @@ def with_entidad(metodo):
                 )
                 
                 
-            setInputValues = request.query_params.dict()
+            # setInputValues = request.query_params.dict()
+
+            if request.content_type == 'application/json':
+                setInputValues = request.data
+            else:
+                setInputValues = request.query_params.dict()
+
+
             campos_busqueda = {
                 campo: valor for campo, valor in setInputValues.items() if campo != "q"
             }
@@ -95,10 +102,6 @@ def listar_view(request, entidad, datos):
 @with_entidad(metodo=GenericDatabaseManager.listar)
 def eliminar(request,entidad, datos):
     try:
-        
-        
-        print("data", datos)
-      
         return Response({"mensaje": "Cargo eliminadas correctamente"}, status= status.HTTP_200_OK)
     except Exception as e:
         error_message = str(e)
