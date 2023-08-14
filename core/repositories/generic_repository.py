@@ -1,7 +1,7 @@
 from django.db import connection
 
 
-class GenericDatabaseManager:
+class GenericRepository:
     # Export method
 
     def listar(
@@ -13,48 +13,59 @@ class GenericDatabaseManager:
             cursor.execute(sql_query)
             result = cursor.fetchall()
         return result
+    
+    
+    def editar(
+        self,
+        query,
+    ):
+        sql_query = f"{query}"
+        with connection.cursor() as cursor:
+            cursor.execute(sql_query)
+               
+
 
 
     # def delete_all(self, entidad, ids):
     #     entity_info = next((item for items in table_query))
 
-    def create(self, table_name, **data):
-        columns = ", ".join(data.keys())
-        placeholders = ", ".join(["%s"] * len(data))
-        values = tuple(data.values())
-        sql_query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+    # def create(self, table_name, **data):
+    #     columns = ", ".join(data.keys())
+    #     placeholders = ", ".join(["%s"] * len(data))
+    #     values = tuple(data.values())
+    #     sql_query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
 
-        with connection.cursor() as cursor:
-            cursor.execute(sql_query, values)
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(sql_query, values)
 
-    def update(self, table_name, condition_field, condition_value, **data):
-        set_values = ", ".join([f"{column} = %s" for column in data.keys()])
-        values = tuple(data.values())
-        sql_query = f"UPDATE {table_name} SET {set_values} WHERE {condition_field} = %s"
-        values += (condition_value,)
+    # def update(self, table_name, condition_field, condition_value, **data):
+    #     set_values = ", ".join([f"{column} = %s" for column in data.keys()])
+    #     values = tuple(data.values())
+    #     sql_query = f"UPDATE {table_name} SET {set_values} WHERE {condition_field} = %s"
+    #     values += (condition_value,)
 
-        with connection.cursor() as cursor:
-            cursor.execute(sql_query, values)
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(sql_query, values)
             
                    
 
-    def delete(self, table_name, condition_field, condition_value):
-        sql_query = f"DELETE FROM {table_name} WHERE {condition_field} = %s"
-        values = (condition_value,)
+    # def delete(self, table_name, condition_field, condition_value):
+    #     sql_query = f"DELETE FROM {table_name} WHERE {condition_field} = %s"
+    #     values = (condition_value,)
 
-        with connection.cursor() as cursor:
-            cursor.execute(sql_query, values)
-
-
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(sql_query, values)
 
 
 
-    def delete_all(self, table_name, condition_field, ids):
-        sql_query = f"DELETE FROM {table_name} WHERE {condition_field} IN ({','.join(['%s'] * len(ids))})"
-        values = tuple(ids)
 
-        with connection.cursor() as cursor:
-            cursor.execute(sql_query, values)
+
+    # def delete_all(self, table_name, condition_field, ids):
+    #     sql_query = f"DELETE FROM {table_name} WHERE {condition_field} IN ({','.join(['%s'] * len(ids))})"
+    #     values = tuple(ids)
+
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(sql_query, values)
 
 
 # CREATE

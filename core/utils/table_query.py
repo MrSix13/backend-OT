@@ -1,13 +1,15 @@
 pref = "public.core_"
 
 
+
+
 table_query = [
     {
         "table_name": pref + "usuarios U",
         "entidad": "usuarios",
        "query": [],
-        "params": ["_p1", "_p2"],
-        "def": ["", "0"],
+        "params": ["_p1", "_p2", "_p3"],
+        "def": ["", "0", ""],
          "query01":  
         """SELECT 1, U.id, U.nombre, U.telefono, U.correo, CASE
            WHEN U.estado = 1 THEN 'Activo'
@@ -20,24 +22,25 @@ table_query = [
          WHERE (LOWER(U.nombre) LIKE LOWER('%_p1%') OR '_p1' = '') 
            AND (U.cargo = _p2 OR _p2 = 0)""",
        "query02": "SELECT * FROM " + pref + "Usuarios",
-       "query03": "inser",
-       "query04": "update",
+       "query03": """INSERT INTO """ + pref + """Usuarios (nombre, password, cargo, telefono, correo, estado) 
+                    VALUES(_p1);""",
+       "query04": """UPDATE """ + pref + """Usuarios SET _p3 WHERE id = _p1;""",
        "query05": "DELETE FROM " + pref + "Usuarios " + 
                   "WHERE id IN (_p1)",
     },
     {
         "table_name": pref + "cargos",
+        "entidad": "cargos",
         "params": ["_p1"],
         "def":[""],
-        "entidad": "cargos",
         "query01": """SELECT 1, id, nombre FROM """ + pref + """Cargos"""
         """ WHERE LOWER(nombre) LIKE LOWER('%_p1%')""",
         "query02": "SELECT id, nombre FROM " + pref + "Cargos",
         "query03": [],
     },
     {
-        "table_name": pref + "personas",
-        "entidad": "personas",
+        "table_name": pref + "permisos",
+        "entidad": "permisos",
         "fields": "",
         "join": "",
         "where": "",
