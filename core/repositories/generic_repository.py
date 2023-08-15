@@ -1,5 +1,7 @@
 from django.db import connection
-
+from core.views.generic_view import clausula_query
+from core.utils.table_query import table_query
+import pyexcel as pe
 
 class GenericRepository:
     # Export method
@@ -24,7 +26,28 @@ class GenericRepository:
             cursor.execute(sql_query)
                
 
+    def exportar_a_excel(self, entidad, limit=999):
+         entity_info, _ = clausula_query(table_query, entidad, {})
 
+         if not entity_info:
+            raise Exception(f"Entidad '{entidad}' no encontrada")
+
+         sql_query = f"{entity_info['query']} LIMIT {limit}"
+         with connection.cursor() as cursor:
+            cursor.execute(sql_query)
+            result = cursor.fetchall()
+
+         column_headers = entity_info['params']
+
+         data = [column_headers] + [list(item.values()) for item in result]
+
+         sheet_name = entidad.capitalize()
+
+         book = pe.get_book(bookdict={sheet_name: data})
+         xls_data = book.save_to_memory("xls")
+
+         return xls_data.getvalue()
+        
 
     # def delete_all(self, entidad, ids):
     #     entity_info = next((item for items in table_query))

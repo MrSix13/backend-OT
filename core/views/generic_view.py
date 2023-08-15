@@ -2,6 +2,7 @@ from functools import wraps
 from django.db import IntegrityError
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import JSONParser
+from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -146,7 +147,20 @@ def editar():
 
 
 
+@api_view(['POST'])
+@with_entidad(metodo=GenericRepository.exportar_a_excel)
+def crear_archivo_xls_view(request, entidad, datos):
+    try:
+        limit = 50 #VARIABLE PARA CREAR PAGINACION
 
+        xls_data = datos(entidad, limit)
+
+        response = HttpResponse(xls_data, content_type="application/vnd.ms-excel")
+        response["Content-Disposition"] = f"attachment; filename={entidad}.xls"
+        return response
+    except Exception as e:
+          error_message= str(e)
+          return Response({"error:":error_message}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
