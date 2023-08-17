@@ -11,19 +11,20 @@ table_query = [
         "params": ["_p1", "_p2", "_p3"],
         "def": ["", "0", ""],
          "query01":  
-        """SELECT 1, U.id, U.nombre, U.telefono, U.correo, CASE
-           WHEN U.estado = 1 THEN 'Activo'
-           WHEN U.estado = 2 THEN 'Suspendido'
-           ELSE 'Sin estado'
-           END AS estado, U.cargo, C.nombre 
-          FROM """ + pref + """Usuarios U
-          JOIN """ + pref + """Cargos C 
-            ON C.id = U.cargo
-         WHERE (LOWER(U.nombre) LIKE LOWER('%_p1%') OR '_p1' = '') 
-           AND (U.cargo = _p2 OR _p2 = 0)""",
-       "query02": "SELECT * FROM " + pref + "Usuarios",
-       "query03": """INSERT INTO """ + pref + """Usuarios (nombre, password, cargo, telefono, correo, estado) 
-                    VALUES(_p1);""",
+        """SELECT 1, U.id, U.nombre, U.telefono, U.correo, 
+             CASE
+             WHEN U.estado = 1 THEN 'Activo'
+             WHEN U.estado = 2 THEN 'Suspendido'
+             ELSE 'Sin estado'
+              END AS estado, U.cargo, C.nombre 
+             FROM """ + pref + """Usuarios U
+             JOIN """ + pref + """Cargos C 
+               ON C.id = U.cargo
+            WHERE (LOWER(U.nombre) LIKE LOWER('%_p1%') OR '_p1' = '') 
+              AND (U.cargo = _p2 OR _p2 = 0) 
+            ORDER BY U.nombre""",
+       "query02": "SELECT id, nombre FROM " + pref + "Usuarios ORDER BY 2",
+       "query03": """INSERT INTO """ + pref + """Usuarios (nombre, password, cargo, telefono, correo, estado) VALUES(_p1);""",
        "query04": """UPDATE """ + pref + """Usuarios SET _p3 WHERE id = _p1;""",
        "query05": "DELETE FROM " + pref + "Usuarios " + 
                   "WHERE id IN (_p1)",
@@ -35,7 +36,16 @@ table_query = [
         "def":[""],
         "query01": """SELECT 1, id, nombre FROM """ + pref + """Cargos"""
         """ WHERE LOWER(nombre) LIKE LOWER('%_p1%')""",
-        "query02": "SELECT id, nombre FROM " + pref + "Cargos",
+        "query02": "SELECT id, nombre FROM " + pref + "Cargos ORDER BY 2",
+        "query03": [],
+    },
+    {
+        "table_name": pref + "comunas",
+        "entidad": "comunas",
+        "params": ["_p1"],
+        "def":[""],
+        "query01": "",
+        "query02": "SELECT id, nombre FROM " + pref + "comunas ORDER BY 2",
         "query03": [],
     },
     {

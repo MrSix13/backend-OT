@@ -1,7 +1,8 @@
 from django.db import connection
-from core.views.generic_view import clausula_query
+# from core.views.generic_view import clausula_query
 from core.utils.table_query import table_query
 import pyexcel as pe
+from django.db import IntegrityError
 
 class GenericRepository:
     # Export method
@@ -21,32 +22,43 @@ class GenericRepository:
         self,
         query,
     ):
-        sql_query = f"{query}"
-        with connection.cursor() as cursor:
-            cursor.execute(sql_query)
-               
+        try:
+            sql_query = f"{query}"
+            with connection.cursor() as cursor:
+                cursor.execute(sql_query)
+        except IntegrityError:
+            raise IntegrityError("IntegrityError2")
+        except Exception as e:
+            raise Exception("Error al editar:" + str(e))
+        
+        
+        
+        
+        
+        
+        
+        
+    # def exportar_a_excel(self, entidad, limit=999):
+    #      entity_info, _ = clausula_query(table_query, entidad, {})
 
-    def exportar_a_excel(self, entidad, limit=999):
-         entity_info, _ = clausula_query(table_query, entidad, {})
+    #      if not entity_info:
+    #         raise Exception(f"Entidad '{entidad}' no encontrada")
 
-         if not entity_info:
-            raise Exception(f"Entidad '{entidad}' no encontrada")
+    #      sql_query = f"{entity_info['query']} LIMIT {limit}"
+    #      with connection.cursor() as cursor:
+    #         cursor.execute(sql_query)
+    #         result = cursor.fetchall()
 
-         sql_query = f"{entity_info['query']} LIMIT {limit}"
-         with connection.cursor() as cursor:
-            cursor.execute(sql_query)
-            result = cursor.fetchall()
+    #      column_headers = entity_info['params']
 
-         column_headers = entity_info['params']
+    #      data = [column_headers] + [list(item.values()) for item in result]
 
-         data = [column_headers] + [list(item.values()) for item in result]
+    #      sheet_name = entidad.capitalize()
 
-         sheet_name = entidad.capitalize()
+    #      book = pe.get_book(bookdict={sheet_name: data})
+    #      xls_data = book.save_to_memory("xls")
 
-         book = pe.get_book(bookdict={sheet_name: data})
-         xls_data = book.save_to_memory("xls")
-
-         return xls_data.getvalue()
+    #      return xls_data.getvalue()
         
 
     # def delete_all(self, entidad, ids):
