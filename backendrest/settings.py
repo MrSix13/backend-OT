@@ -98,28 +98,29 @@ WSGI_APPLICATION = 'backendrest.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config("NAME"),
-        'USER':config('USER'),
-        'PASSWORD':config('PASSWORD'),
-        'HOST':config('HOST'),
-        'PORT':config('PORT'),
-    }
-}
-
-
+#POSTGRES
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config("DB_NAME"),
-#         'USER': config('DB_USER'),
-#         'PASSWORD': config('DB_PASSWORD'),
-#         'HOST': config('DB_HOST'),
-#         'PORT': config('DB_PORT'),
+#         'NAME': config("NAME"),
+#         'USER':config('USER'),
+#         'PASSWORD':config('PASSWORD'),
+#         'HOST':config('HOST'),
+#         'PORT':config('PORT'),
 #     }
 # }
+
+#MYSQL
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': config("MYSQL_NAME"),  
+        'USER': config('MYSQL_USER'),  
+        'PASSWORD': config('MYSQL_PASSWORD'),  
+        'HOST': config('MYSQL_HOST'),  
+        'PORT': config('MYSQL_PORT'),  
+    }
+}
 
 
 # Password validation
