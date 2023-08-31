@@ -1,43 +1,62 @@
 pref = ""
 
 
-
-
 table_query = [
     {
-        "table_name": pref + "usuarios U",
-        "entidad": "usuarios",
-       "query": [],
-        "params": ["_p1", "_p2", "_p3"],
-        "def": ["", "0", ""],
-         "query01":  
-        """SELECT 1, U.id, U.nombre, U.telefono, U.correo, 
-             CASE
-             WHEN U.estado = 1 THEN 'Activo'
-             WHEN U.estado = 2 THEN 'Suspendido'
-             ELSE 'Sin estado'
-              END AS estado, U.cargo, C.nombre 
-             FROM """ + pref + """Usuarios U
-             JOIN """ + pref + """Cargos C 
-               ON C.id = U.cargo
-            WHERE (LOWER(U.nombre) LIKE LOWER('%_p1%') OR '_p1' = '') 
-              AND (U.cargo = _p2 OR _p2 = 0) 
-            ORDER BY U.nombre""",
-       "query02": "SELECT id, nombre FROM " + pref + "Usuarios ORDER BY 2",
-       "query03": """INSERT INTO """ + pref + """Usuarios (nombre, password, cargo, telefono, correo, estado) VALUES(_p1);""",
-       "query04": """UPDATE """ + pref + """Usuarios SET _p3 WHERE id = _p1;""",
-       "query05": "DELETE FROM " + pref + "Usuarios " + 
-                  "WHERE id IN (_p1)",
+        "entidad": "tipos",
+        "query": [],
+        "params": ["_p1"],
+        "def": [""],
+       "query02": "CALL spTipos('_p1')",
     },
     {
-        "table_name": pref + "cargos",
+        "entidad": "usuarios",
+        "query": [],
+        "head": ["","ID","NOMBRE", "TELEFONO", "CORREO","ESTADO", "CARGO ID", "CARGO"],
+        "params": ["_p1", "_p2", "_p3","_id"],
+        "def": ["", "0", "", "0"],
+       "query01": "CALL spUsuarios(1, '_p1', _p2,'', _id, 100)",
+       "query02": "CALL spUsuarios(2, '', 0,'', 0, 0)",
+       "query03": "CALL spUsuarios(3, \"_p1\", 0, '', 0, 0)",
+       "query04": "CALL spUsuarios(4,\"_p1\", _p2,'', 0, 0)",
+       "query05": "CALL spUsuarios(5, '_p1', 0, '', 0, 0)",
+       "query06": "CALL spUsuarios(6, '_p1', 0, '_p3', 0,0)",
+    },
+    {
         "entidad": "cargos",
+        "query": [],
+        "head": ["","ID", "CARGO"],
+        "params": ["_p1", "_p2",'_id'],
+        "def": ["", "0","0"],
+       "query01": "CALL spCargos(1, '_p1', _p2,_id, 100)",
+       "query02": "CALL spCargos(2, '', 0, 0, 0)",
+       "query03": "CALL spCargos(3, \"_p1\", 0, 0, 0)",
+       "query04": "CALL spCargos(4,\"_p1\", _p2, 0, 0)",
+       "query05": "CALL spCargos(5, '_p1', 0, 0, 0)",
+    },
+    {
+        "entidad": "funcionalidades",
+        "query": [],
+        "head": ["","ID", "FUNCIONALIDAD"],
+        "params": ["_p1", "_p2",'_id'],
+        "def": ["", "0","0"],
+       "query01": "CALL spFuncionalidades(1, '_p1', _p2,_id, 100)",
+       "query02": "CALL spFuncionalidades(2, '', 0, 0, 0)",
+       "query03": "CALL spFuncionalidades(3, \"_p1\", 0, 0, 0)",
+       "query04": "CALL spFuncionalidades(4,\"_p1\", _p2, 0, 0)",
+       "query05": "CALL spFuncionalidades(5, '_p1', 0, 0, 0)",
+    },
+
+    {
+        "entidad": "",
+        "query": [],
         "params": ["_p1"],
         "def":[""],
-        "query01": """SELECT 1, id, nombre FROM """ + pref + """Cargos"""
-        """ WHERE LOWER(nombre) LIKE LOWER('%_p1%')""",
+        "query01": """""",
         "query02": "SELECT id, nombre FROM " + pref + "Cargos ORDER BY 2",
-        "query03": [],
+        "query03": """""",
+        "query04": """""",
+        "query05": """""",
     },
     {
         "table_name": pref + "comunas",
@@ -47,20 +66,7 @@ table_query = [
         "query01": "",
         "query02": "SELECT id, nombre FROM " + pref + "comunas ORDER BY 2",
         "query03": [],
-    },
-    {
-        "table_name": pref + "permisos",
-        "entidad": "permisos",
-        "fields": "",
-        "join": "",
-        "where": "",
-    },
-    {
-        "table_name": "public.core_perfiles",
-        "entidad": "perfiles",
-        "fields": "",
-    },
-]
+    },]
 
 # sql query SELECT 1, u.id, u.nombre, u.telefono, u.correo, u.estado, u.cargo, C.nombre  FROM public.core_usuarios U JOIN public.core_cargos C ON C.id = U.id WHERE (u.nombre = 'Sandra')
 

@@ -1,7 +1,7 @@
 from django.urls import path
 
 # from core.views.cargos_view import listar_cargos, crear_cargo,eliminar_cargo,eliminar_all_cargos,editar_cargo, listar_view
-from core.views.generic_view import listar_view, crear, eliminar, editar
+from core.views.generic_view import listar_view, crear, eliminar, editar,exportar_a_excel_view
 
 
 urlpatterns = [
@@ -14,4 +14,5 @@ urlpatterns = [
     path("api/<str:entidad>/crear/", crear, name="crear"),
     path("api/<str:entidad>/editar/", editar, name="editar"),
     path("api/<str:entidad>/eliminar/", eliminar, name="eliminar"),
+    path("api/<str:entidad>/excel/", exportar_a_excel_view, name="excel"),
 ]

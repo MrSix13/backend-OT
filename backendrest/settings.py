@@ -110,6 +110,7 @@ WSGI_APPLICATION = 'backendrest.wsgi.application'
 #     }
 # }
 
+
 #MYSQL
 DATABASES = {
     'default': {
@@ -121,6 +122,8 @@ DATABASES = {
         'PORT': config('MYSQL_PORT'),  
     }
 }
+
+
 
 
 # Password validation

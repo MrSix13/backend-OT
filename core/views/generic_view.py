@@ -1,13 +1,11 @@
 from functools import wraps
-from django.db import IntegrityError
-from rest_framework.decorators import parser_classes
-from rest_framework.parsers import JSONParser
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from core.repositories.generic_repository import GenericRepository
 from core.utils.table_query import table_query
+import pyexcel as pe
 
 generic_repository = GenericRepository()
 
@@ -75,7 +73,6 @@ def with_entidad(metodo):
             
             
             clausula_query(table_query, entidad, campos_busqueda)   
-            generic_repository = GenericRepository()
             
             try:
                 datos = metodo(
@@ -95,6 +92,7 @@ def with_entidad(metodo):
         return _wrapped_view
 
     return decorator
+
 
 
 @api_view(["GET"])
@@ -140,23 +138,27 @@ def editar(request,entidad,error):
         error_message= str(e)
         return Response({"error:":error_message}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@api_view(["GET"])
+@with_entidad(metodo=GenericRepository.listar)
+def exportar_a_excel_view(request, entidad, datos):
+    try:
+        encabezado = None
+        
+        for item in table_query:
+            if item["entidad"] == entidad:
+                encabezado = item["head"]
+                break
 
-
-# @api_view(['POST'])
-# @with_entidad(metodo=GenericRepository.exportar_a_excel)
-# def crear_archivo_xls_view(request, entidad, datos):
-#     try:
-#         limit = 50 #VARIABLE PARA CREAR PAGINACION
-
-#         xls_data = datos(entidad, limit)
-
-#         response = HttpResponse(xls_data, content_type="application/vnd.ms-excel")
-#         response["Content-Disposition"] = f"attachment; filename={entidad}.xls"
-#         return response
-#     except Exception as e:
-#           error_message= str(e)
-#           return Response({"error:":error_message}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
-
+        data = [encabezado] + list(datos)
+        print('datos:', data)
+        book = pe.get_book(bookdict={entidad : data})
+        xls_data = book.save_to_memory("xls")
+        response = HttpResponse(xls_data.getvalue(),content_type="application/vnd.ms-excel")
+        response["Content-Disposition"] = f'attachment; filename="{entidad}.xls"'
+        return response
+    except Exception as e:
+        error_message = str(e)
+        print(error_message)
+        return Response(
+            {"Error": error_message}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

@@ -1,8 +1,9 @@
 from django.db import connection
-# from core.views.generic_view import clausula_query
-from core.utils.table_query import table_query
-import pyexcel as pe
 from django.db import IntegrityError
+
+# from core.views.generic_view import clausula_query
+# from core.utils.table_query import table_query
+# import pyexcel as pe
 
 class GenericRepository:
     # Export method
@@ -40,6 +41,7 @@ class GenericRepository:
         
     # def exportar_a_excel(self, entidad, limit=999):
     #      entity_info, _ = clausula_query(table_query, entidad, {})
+         
 
     #      if not entity_info:
     #         raise Exception(f"Entidad '{entidad}' no encontrada")
