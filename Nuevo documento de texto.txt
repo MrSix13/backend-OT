@@ -1,0 +1,133 @@
+pref = "public.core_"
+
+
+
+
+table_query = [
+    {
+        "entidad": "usuarios",
+        "query": [],
+        "params": ["_p1", "_p2", "_p3"],
+        "def": ["", "0", ""],
+        "query01":  
+        """SELECT 1, U.id, U.nombre, U.telefono, U.correo, 
+             CASE
+             WHEN U.estado = 1 THEN 'Activo'
+             WHEN U.estado = 2 THEN 'Suspendido'
+             ELSE 'Sin estado'
+              END AS estado, U.cargo, C.nombre 
+             FROM """ + pref + """Usuarios U
+             JOIN """ + pref + """Cargos C 
+               ON C.id = U.cargo
+            WHERE (LOWER(U.nombre) LIKE LOWER('%_p1%') OR '_p1' = '') 
+              AND (U.cargo = _p2 OR _p2 = 0) 
+            ORDER BY U.nombre""",
+       "query02": "SELECT id, nombre FROM " + pref + "Usuarios ORDER BY 2",
+       "query03": "INSERT INTO " + pref + "Usuarios (nombre, password, cargo, telefono, correo, estado) VALUES(_p1);",
+       "query04": "UPDATE " + pref + "Usuarios SET _p3 WHERE id = _p1;",
+       "query05": "DELETE FROM " + pref + "Usuarios WHERE id IN (_p1)",
+    },
+    {
+        "entidad": "cargos",
+        "query": [],
+        "params": ["_p1", "_p2"],
+        "def":["0", ""],
+        "query01": """SELECT 1, id, nombre FROM """ + pref + """Cargos """
+                    """WHERE LOWER(_p1) LIKE LOWER('%_p1%')""",
+        "query02": "SELECT id, nombre FROM " + pref + "Cargos ORDER BY nombre",
+        "query03": "INSERT INTO " + pref + "Cargos (nombre) VALUES (_p1);",
+        "query04": "UPDATE " + pref + "Cargos SET nombre = '_p2' WHERE id = _p1;",
+        "query05": "DELETE FROM " + pref + "Cargos WHERE id IN (_p1);",
+    },
+    {
+        "entidad": "funcionalidades",
+        "query": [],
+        "params": ["_p1", "_p2"],
+        "def":["0", ""],
+        "query01": """SELECT F.id AS f_id, F.descripcion AS f_descripcion """
+                     """FROM """ + pref + """Funcionalidades F """
+                    """WHERE (LOWER(F.descripcion) LIKE LOWER('%_p1%') OR '_p1' = '') """
+                    """ORDER BY F.descripcion;""",
+        "query02": "SELECT id, descripcion FROM " + pref + "Funcionalidades ORDER BY descripcion;",
+        "query03": "INSERT INTO " + pref + "Funcionalidades (descripcion) VALUES ('_p1');",
+        "query04": "UPDATE " + pref + "Funcionalidades SET descripcion = '_p2' WHERE id = _p1;",
+        "query05": "DELETE FROM " + pref + "Funcionalidades WHERE id IN (_p1);",
+    },
+    {
+        "entidad": "perfiles",
+        "query": [],
+        "params": ["_p1", "_p2", "_p3", "_p4", "_p5"],
+        "def":["", "", "0", "0", "0"],
+        "query01": """SELECT C.id AS c_id, C.nombre AS c_nombre, F.id AS f_id, F.descripcion AS f_nombre, 
+                    CASE P.permiso 
+                        WHEN 1 THEN 'lectura' 
+                        WHEN 2 THEN 'lectura/escritura' 
+                        ELSE        'sin permiso' 
+                        END AS permiso
+                 FROM """ + pref + """Perfiles P
+                 JOIN """ + pref + """Cargos C
+                   ON C.id = P.cargo
+                  AND (LOWER(C.nombre) LIKE LOWER('%_p1%') OR '_p1' = '')
+                 JOIN """ + pref + """Funcionalidades F
+                   ON F.id	= P.funcionalidad
+                  AND (LOWER(F.descripcion) LIKE LOWER('%_p2%') OR '_p2' = '')
+                WHERE 1
+                ORDER BY C.nombre, F.descripcion;""",
+        "query02": "",
+        "query03": "INSERT INTO " + pref + "Perfiles (cargo, funcionalidad, permiso) VALUES (_p1);",
+        "query04": "UPDATE " + pref + "Perfiles SET permiso = _p3 WHERE cargo = _p4 AND funcionalidad = _p5;",
+        "query05": "DELETE FROM " + pref + "Perfiles WHERE cargo = _p4 AND funcionalidad = _p5;",
+    },
+    {
+        "entidad": "permisos",
+        "query": [],
+        "params": ["_p1", "_p2", "_p3", "_p4", "_p5"],
+        "def":["", "", "0", "0", "0"],
+        "query01": """SELECT 	U.id		    AS c_id, 
+                                U.nombre 	    AS c_nombre, 
+                                F.id 		    AS f_id, 
+                                F.descripcion   AS f_nombre, 
+                                CASE P.permiso 
+                                    WHEN 1 THEN 'lectura' 
+                                    WHEN 2 THEN 'lectura/escritura' 
+                                    ELSE 	    'sin permiso' 
+                                END 			AS permiso
+                        FROM """ + pref + """Permisos P
+                        JOIN """ + pref + """Usuarios U
+                          ON U.id = P.usuario
+                         AND (LOWER(U.nombre) LIKE LOWER('%_p1%') OR '_p1' = '')
+                        JOIN """ + pref + """Funcionalidades F
+                          ON F.id	= P.funcionalidad
+                         AND (LOWER(F.descripcion) LIKE LOWER('%_p2%') OR '_p2' = '')
+                        WHERE 1
+                        ORDER BY U.nombre, F.descripcion;""",
+        "query02": "",
+        "query03": "INSERT INTO " + pref + "Permisos (usuario, funcionalidad, permiso) VALUES (_p3, _p4, _p5);",
+        "query04": "UPDATE " + pref + "Permisos SET permiso = _p3 WHERE usuario = _p4 AND funcionalidad = _p5;",
+        "query05": "DELETE FROM " + pref + "Permisos WHERE usuario = _p4 AND funcionalidad = _p5;",
+    },
+    {
+        "entidad": "",
+        "query": [],
+        "params": ["_p1"],
+        "def":[""],
+        "query01": """""",
+        "query02": "SELECT id, nombre FROM " + pref + "Cargos ORDER BY 2",
+        "query03": """""",
+        "query04": """""",
+        "query05": """""",
+    },
+    {
+        "table_name": pref + "comunas",
+        "entidad": "comunas",
+        "params": ["_p1"],
+        "def":[""],
+        "query01": "",
+        "query02": "SELECT id, nombre FROM " + pref + "comunas ORDER BY 2",
+        "query03": [],
+    },
+]
+
+# sql query SELECT 1, u.id, u.nombre, u.telefono, u.correo, u.estado, u.cargo, C.nombre  FROM public.core_usuarios U JOIN public.core_cargos C ON C.id = U.id WHERE (u.nombre = 'Sandra')
+
+# SELECT u.id, u.nombre, u.telefono, u.estado, u.cargo, C.nombre FROM public.core_usuarios u JOIN public.core_cargos C on C.id = u.id WHERE 1=1
